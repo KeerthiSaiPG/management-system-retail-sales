@@ -1,3 +1,3 @@
-backend/src/data/*.csv
-backend/src/data/*.xlsx
-backend/src/data/*.json
+# backend/src/data/*.csv
+# backend/src/data/*.xlsx
+# backend/src/data/*.json
