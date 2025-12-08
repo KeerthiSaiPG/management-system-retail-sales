@@ -3,9 +3,9 @@ import { getMetadata } from "../services/metadataService.js";
 
 const router = Router();
 
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
   try {
-    const meta = getMetadata();
+    const meta = await getMetadata();
     return res.json({
       success: true,
       ...meta
@@ -18,5 +18,6 @@ router.get("/", (req, res) => {
     });
   }
 });
+
 
 export default router;

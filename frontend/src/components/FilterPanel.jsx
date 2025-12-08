@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import { PRODUCT_CATEGORY_OPTIONS, TAG_OPTIONS, PAYMENT_METHOD_OPTIONS } from "../utils/options";
+import { getCategoryColor } from "../utils/categoryColors";
+import DateRangeSelector from "./DateRangeSelector";
 
 
 export default function FilterPanel({ filters = {}, onChange }) {
@@ -42,7 +44,7 @@ export default function FilterPanel({ filters = {}, onChange }) {
       <div className="filter-section">
         <div className="filter-title">Region</div>
         <Select isMulti options={[
-          "North","South","East","West"
+          "North","South","East","West", "Central"
         ].map(v=>({value:v,label:v}))}
           value={local.regions.map(r=>({value:r,label:r}))}
           onChange={(vals)=> setLocal(prev=>({...prev, regions: vals? vals.map(v=>v.value):[] }))}
@@ -52,7 +54,7 @@ export default function FilterPanel({ filters = {}, onChange }) {
 
       <div className="filter-section">
         <div className="filter-title">Gender</div>
-        <Select isMulti options={["Male","Female","Other"].map(v=>({value:v,label:v}))}
+        <Select isMulti options={["Male","Female"].map(v=>({value:v,label:v}))}
           value={local.genders.map(g=>({value:g,label:g}))}
           onChange={(vals)=> setLocal(prev=>({...prev, genders: vals? vals.map(v=>v.value):[] }))}
           placeholder="Select genders"
@@ -128,10 +130,11 @@ export default function FilterPanel({ filters = {}, onChange }) {
 
       <div className="filter-section">
         <div className="filter-title">Date Range</div>
-        <div style={{display:'flex', gap:8}}>
-          <input type="date" value={local.dateFrom||''} onChange={(e)=> setLocal(prev=>({...prev, dateFrom: e.target.value}))} />
-          <input type="date" value={local.dateTo||''} onChange={(e)=> setLocal(prev=>({...prev, dateTo: e.target.value}))} />
-        </div>
+        <DateRangeSelector 
+          dateFrom={local.dateFrom}
+          dateTo={local.dateTo}
+          onChange={(from, to) => setLocal(prev => ({ ...prev, dateFrom: from, dateTo: to }))}
+        />
       </div>
 
       <div className="filter-actions">
@@ -145,7 +148,22 @@ export default function FilterPanel({ filters = {}, onChange }) {
         <div className="chips">
           {local.regions.map(r=> <div key={r} className="chip">{r}</div>)}
           {local.genders.map(g=> <div key={g} className="chip">{g}</div>)}
-          {local.productCategories.map(c=> <div key={c} className="chip">{c}</div>)}
+          {local.productCategories.map(c=> {
+            const categoryColor = getCategoryColor(c);
+            return (
+              <div 
+                key={c} 
+                className="chip"
+                style={{
+                  background: categoryColor.background,
+                  color: categoryColor.text,
+                  border: `1px solid ${categoryColor.border}`
+                }}
+              >
+                {c}
+              </div>
+            );
+          })}
           {local.tags.map(t=> <div key={t} className="chip">{t}</div>)}
           {local.paymentMethods.map(p=> <div key={p} className="chip">{p}</div>)}
           {(local.ageMin || local.ageMax) ? <div className="chip">Age: {local.ageMin || '—'} - {local.ageMax || '—'}</div> : null}

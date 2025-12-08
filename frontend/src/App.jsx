@@ -18,41 +18,50 @@ export default function App() {
 
   return (
     <div className="container">
+      {/* HEADER: Logo, Title, Search & Sorting Controls */}
       <header className="header">
         <div className="brand">
-          <div className="logo"></div>
+          <div className="logo">
+            <img src="/src/assets/logo.png" alt="Retail Sales Management System Logo" className="logo-img" />
+          </div>
           <div>
             <div className="h-title">Retail Sales Management System</div>
           </div>
         </div>
 
-        <div style={{display:'flex', gap:12, alignItems:'center'}}>
-          <div style={{minWidth:220}}>
+        {/* Search and Sort - Stack vertically on mobile, horizontally on desktop */}
+        <div className="header-controls">
+          <div className="search-wrapper">
             <SearchBar value={state.search} onSearch={setSearch} />
           </div>
           <SortingDropdown sort={state.sort} onChange={setSort} />
         </div>
       </header>
 
+      {/* MAIN LAYOUT: Sidebar (Filter) on LEFT for desktop, STACKED on mobile */}
       <div className="layout">
+        {/* FILTER SIDEBAR: Left on desktop, Top on mobile */}
         <aside className="sidebar card">
           <FilterPanel filters={state.filters} onChange={setFilters} />
         </aside>
 
+        {/* TABLE SECTION: Right on desktop, Bottom on mobile */}
         <main className="main">
           <div className="card">
-            <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:10}}>
-              <div style={{fontWeight:700}}>Transactions</div>
-              <div style={{color:'#6B7280', fontSize:13}}>Showing {state.items.length} of {state.total}</div>
+            {/* Title & Summary Info */}
+            <div className="table-header-info">
+              <div className="table-title">Transactions</div>
+              <div className="table-summary">Showing {state.items.length} of {state.total}</div>
             </div>
 
+            {/* STATS: Responsive grid that stacks on mobile */}
             <div className="stats" style={{marginBottom:12}}>
               <div className="stat">
                 <div>
                   <div className="lbl">Total Transactions</div>
                   <div className="val">{state.total}</div>
                 </div>
-                <div style={{textAlign:'right', color: 'var(--muted)'}}>All time</div>
+                <div className="stat-meta">All time</div>
               </div>
 
               <div className="stat">
@@ -60,7 +69,7 @@ export default function App() {
                   <div className="lbl">Current Page</div>
                   <div className="val">{state.page}</div>
                 </div>
-                <div style={{textAlign:'right', color:'var(--muted)'}}>Page size {state.pageSize}</div>
+                <div className="stat-meta">Page size {state.pageSize}</div>
               </div>
 
               <div className="stat">
@@ -68,13 +77,16 @@ export default function App() {
                   <div className="lbl">Results</div>
                   <div className="val">{state.items.length}</div>
                 </div>
-                <div style={{textAlign:'right', color:'var(--muted)'}}>Filtered</div>
+                <div className="stat-meta">Filtered</div>
               </div>
             </div>
 
+            {/* TABLE with horizontal scroll on mobile */}
             <TransactionTable items={state.items} />
-            <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginTop:10}}>
-              <div style={{color:'var(--muted)'}}>Tip: Use filters to narrow results</div>
+
+            {/* Pagination & Tip */}
+            <div className="table-footer">
+              <div className="pagination-tip">Tip: Use filters to narrow results</div>
               <PaginationControls page={state.page} totalPages={state.totalPages} onPageChange={setPage} />
             </div>
           </div>

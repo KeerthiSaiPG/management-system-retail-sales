@@ -53,7 +53,7 @@ export default function SortingDropdown({ sort = { sortBy: "date", sortOrder: "d
   };
 
   return (
-    <div ref={ref} style={{ position: "relative", minWidth: 220 }}>
+    <div ref={ref} style={{ position: "relative", minWidth: 220, display: "flex" }}>
       <button
         className="sort-btn"
         onClick={() => setOpen(o => !o)}
@@ -61,8 +61,8 @@ export default function SortingDropdown({ sort = { sortBy: "date", sortOrder: "d
         aria-expanded={open}
       >
         <div style={{display:'flex', alignItems:'center', gap:10}}>
-          <div style={{fontWeight:700}}>{active.label}</div>
-          <div style={{color:'#64748B', fontSize:13}}>Sort</div>
+          <div style={{fontWeight:700}}>Sort</div>
+          <div style={{color:'#64748B', fontSize:13}}>{active.label}</div>
         </div>
         <FiChevronDown style={{marginLeft:8}} />
       </button>

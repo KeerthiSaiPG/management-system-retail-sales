@@ -1,10 +1,12 @@
 import React from "react";
+import { getCategoryColor } from "../utils/categoryColors";
 
 export default function TransactionTable({ items = [] }) {
-  if (!items || items.length === 0) return <div className="no-results">No transactions found</div>;
+  if (!items || items.length === 0)
+    return <div className="no-results">No transactions found</div>;
 
   return (
-    <div style={{overflowX:'auto'}}>
+    <div style={{ overflowX: "auto" }}>
       <table className="transactions">
         <thead>
           <tr>
@@ -19,18 +21,59 @@ export default function TransactionTable({ items = [] }) {
           </tr>
         </thead>
         <tbody>
-          {items.map((r, idx) => (
+          {items.map((r, idx) => {
+            const categoryColor = getCategoryColor(r.product_category);
+            return (
             <tr key={idx}>
-              <td>{ r.Date ? new Date(r.Date).toLocaleDateString() : (r.DateRaw || '-') }</td>
-              <td style={{fontWeight:700}}>{ r["Customer Name (mapped)"] || r["Customer Name"] || "-" }</td>
-              <td style={{color:'#6B7280'}}>{r["Phone Number (mapped)"] || r["Phone Number"] || "-"}</td>
-              <td>{r["Product Name (mapped)"] || r["Product Name"] || "-"}</td>
-              <td><div className="chip" style={{background:'#EEF2FF'}}>{r["Product Category (mapped)"] || r["Product Category"] || "-"}</div></td>
-              <td>{r.Quantity ?? 0}</td>
-              <td>{ typeof r.FinalAmount === "number" ? `₹ ${Number(r.FinalAmount).toLocaleString()}` : (r.FinalAmountRaw || '-') }</td>
-              <td>{r["Payment Method (mapped)"] || r["Payment Method"] || "-"}</td>
+              {/* DATE */}
+              <td>
+                {r.date
+                  ? new Date(r.date).toLocaleDateString()
+                  : "-"}
+              </td>
+
+              {/* CUSTOMER */}
+              <td style={{ fontWeight: 700 }}>
+                {r.customer_name || "-"}
+              </td>
+
+              {/* PHONE */}
+              <td style={{ color: "#6B7280" }}>
+                {r.phone_number || "-"}
+              </td>
+
+              {/* PRODUCT */}
+              <td>{r.product_name || "-"}</td>
+
+              {/* CATEGORY - with color coding */}
+              <td>
+                <div 
+                  className="chip" 
+                  style={{ 
+                    background: categoryColor.background,
+                    color: categoryColor.text,
+                    border: `1px solid ${categoryColor.border}`
+                  }}
+                >
+                  {r.product_category || "-"}
+                </div>
+              </td>
+
+              {/* QTY */}
+              <td>{r.quantity || 0}</td>
+
+              {/* FINAL AMOUNT */}
+              <td>
+                {r.final_amount
+                  ? `₹ ${Number(r.final_amount).toLocaleString()}`
+                  : "-"}
+              </td>
+
+              {/* PAYMENT METHOD */}
+              <td>{r.payment_method || "-"}</td>
             </tr>
-          ))}
+            );
+          })}
         </tbody>
       </table>
     </div>

@@ -1,24 +1,21 @@
+// src/services/metadataService.js
+import pool from "../db.js";
 
-import { getSalesData } from "../utils/csvLoader.js";
+export async function getMetadata() {
+  const meta = {};
 
-const dedupe = (arr) => Array.from(new Set(arr.filter(Boolean)));
+  // Helper to fetch distinct values sorted alphabetically
+  async function distinct(column) {
+    const sql = `SELECT DISTINCT ${column} AS val FROM sales WHERE ${column} IS NOT NULL AND ${column} <> '' ORDER BY val ASC`;
+    const res = await pool.query(sql);
+    return res.rows.map(r => r.val);
+  }
 
-export const getMetadata = () => {
-  const data = getSalesData() || [];
+  meta.productCategories = await distinct("product_category");
+  meta.tags = await distinct("tags");
+  meta.paymentMethods = await distinct("payment_method");
+  meta.regions = await distinct("customer_region");
+  meta.genders = await distinct("gender");
 
-  const productCategories = dedupe(data.map(r => (r["Product Category"] || "").trim()));
-  const tags = dedupe(data.flatMap(r => (r.Tags || "").split(",").map(t => t.trim()).filter(Boolean)));
-  const paymentMethods = dedupe(data.map(r => (r["Payment Method"] || "").trim()));
-  const regions = dedupe(data.map(r => (r["Customer Region"] || "").trim()));
-  const genders = dedupe(data.map(r => (r.Gender || "").trim()));
-
-  const sortAlpha = (list) => list.sort((a,b) => a.localeCompare(b));
-
-  return {
-    productCategories: sortAlpha(productCategories),
-    tags: sortAlpha(tags),
-    paymentMethods: sortAlpha(paymentMethods),
-    regions: sortAlpha(regions),
-    genders: sortAlpha(genders)
-  };
-};
+  return meta;
+}
