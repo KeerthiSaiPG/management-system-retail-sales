@@ -4,10 +4,10 @@ import { salesQueryValidationRules, validateSalesQuery } from "../middleware/val
 
 const router = Router();
 
-// Main paginated sales endpoint
+
 router.get("/", salesQueryValidationRules(), validateSalesQuery, getSalesHandler);
 
-// CSV export (no pagination)
+
 router.get("/export", salesQueryValidationRules(), validateSalesQuery, getSalesExportHandler);
 
 export default router;
