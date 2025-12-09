@@ -1,68 +1,107 @@
 # Retail Sales Management System
 
 ## 1. Overview
+A cloud-hosted full-stack Retail Sales Analytics System built using PostgreSQL, Express, and React.  
+It provides advanced full-text search, multi-select filtering, sorting, and server-side pagination.  
+Backend runs on **Render**, database on **Neon PostgreSQL**, and frontend on **Vercel**.  
+The system is optimized for performance, correctness, and production deployment.
 
-A full-stack Sales Analytics Dashboard built with React and Node.js. Features include full-text search, multi-select filtering, sorting, pagination, and CSV export. Backend handles all data operations efficiently using a precomputed search index and an optimized in-memory pipeline.
 
 ## 2. Tech Stack
 
-**Frontend:** React, Vite, Axios, React Hooks
-**Backend:** Node.js, Express, csv-parser, compression, AbortController-compatible pipeline
-**Tools:** URLSearchParams, express-validator, in-memory caching, debouncing
+### **Frontend**
+- React (Vite)
+- Axios
+- React Hooks
+- CSS-based responsive UI
+
+### **Backend**
+- Node.js + Express
+- PostgreSQL (Neon)
+- pg (node-postgres)
+- express-validator
+- compression
+- cors
+
+### **Deployment**
+- **Frontend:** Vercel  
+- **Backend:** Render  
+- **Database:** Neon PostgreSQL  
+
 
 ## 3. Search Implementation Summary
+- Full-text search on **Customer Name** and **Phone Number**.
+- Case-insensitive using PostgreSQL `ILIKE`.
+- Token-based search (all tokens must match).
+- Runs on backend for accuracy and performance.
+- Works together with filters, sorting, and pagination.
 
-* Full-text search on *Customer Name* and *Phone Number*.
-* Case-insensitive tokenized match (`every()` token must match).
-* Integrated with filters, sorting, and pagination.
+
 
 ## 4. Filter Implementation Summary
+Supports multi-select and range filters for:
+- Customer Region  
+- Gender  
+- Age Range  
+- Product Category  
+- Tags  
+- Payment Method  
+- Date Range  
 
-* Multi-select and range filters for: Region, Gender, Age Range, Category, Tags, Payment Method, Date Range.
-* Case-insensitive matching, trimmed values, and CSV-safe parsing.
-* Filters compose via AND logic and work alongside search and sorting.
-* Backend authoritative: no client-side filtering duplication.
+Filter features:
+- Case-insensitive comparisons  
+- Normalized and trimmed values  
+- Fully server-side filtering  
+- Combined using logical AND  
+- Works seamlessly with search and sorting  
+
 
 ## 5. Sorting Implementation Summary
+- Backend-powered SQL `ORDER BY` sorting.
+- Supports:
+  - Date  
+  - Quantity  
+  - Final Amount  
+  - Customer Name  
+- ASC or DESC mode.
+- Applied after filtering and search, before pagination.
 
-* Supports ASC/DESC ordering.
-* Handles numeric fields, dates, and string fields with automatic detection.
-* Sorting happens **after** search & filters but **before** pagination.
+
 
 ## 6. Pagination Implementation Summary
+- Server-side pagination using SQL `LIMIT` and `OFFSET`.
+- Uses `page` + `pageSize` to fetch slices.
+- API returns:
+  - `items`
+  - `total`
+  - `page`
+  - `pageSize`
+  - `totalPages`
 
-* Server-side pagination using page + pageSize.
-* Pagination clamp ensures valid ranges and safe slicing.
-* Response returns: `total`, `page`, `pageSize`, `totalPages`, and `items`.
-* Works with search, filters, and sorting.
+Works consistently with all filters, sorting, and search inputs.
+
+
 
 ## 7. Setup Instructions
 
-### Backend
+### **Backend Setup**
 
+#### **Local Backend Setup**
 ```bash
 cd backend
 npm install
 npm start
 ```
-
-* Runs at: `http://localhost:4000`
-* CSV file expected at: `backend/src/data/sales.csv`
-
-### Frontend
-
+### **Frontend Setup**
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
 
-* Runs at: `http://localhost:5173` 
+> **Note:**  
+> The initial page load may take a few seconds.  
+> This happens because the backend (Render) and the database (Neon) automatically enter an idle state when inactive.  
+> On the first request, both services wake up, resulting in a brief delay.  
+> After waking up, all subsequent requests perform normally.
 
-### Environment Variables
-
-Create `.env` in frontend:
-
-```
-VITE_API_BASE=http://localhost:4000
-```
