@@ -5,6 +5,8 @@ import SortingDropdown from "./components/SortingDropdown";
 import TransactionTable from "./components/TransactionTable";
 import PaginationControls from "./components/PaginationControls";
 import useSalesQuery from "./hooks/useSalesQuery";
+import logo from "./assets/logo.png"; 
+
 
 export default function App() {
   const {
@@ -16,13 +18,35 @@ export default function App() {
     reload
   } = useSalesQuery();
 
+  if (import.meta.env.PROD) {
+    return (
+      <div className="container">
+        <header className="header">
+          <div className="brand">
+            <div className="logo">
+              <img
+                src={logo}
+                alt="Retail Sales Management System Logo"
+                className="logo-img"
+              />
+            </div>
+          </div>
+        </header>
+      </div>
+    );
+  }
+
   return (
     <div className="container">
       {/* HEADER: Logo, Title, Search & Sorting Controls */}
       <header className="header">
         <div className="brand">
           <div className="logo">
-            <img src="/src/assets/logo.png" alt="Retail Sales Management System Logo" className="logo-img" />
+            <img
+              src={logo}
+              alt="Retail Sales Management System Logo"
+              className="logo-img"
+            />
           </div>
           <div>
             <div className="h-title">Retail Sales Management System</div>
