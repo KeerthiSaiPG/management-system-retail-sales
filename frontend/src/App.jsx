@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import SearchBar from "./components/SearchBar";
 import FilterPanel from "./components/FilterPanel";
 import SortingDropdown from "./components/SortingDropdown";
@@ -18,6 +18,7 @@ export default function App() {
     reload
   } = useSalesQuery();
 
+<<<<<<< HEAD
   if (import.meta.env.PROD) {
     return (
       <div className="container">
@@ -37,6 +38,15 @@ export default function App() {
   }
 
   return (
+=======
+  useEffect(() => {
+    const base = import.meta.env.VITE_BACKEND_URL || "";
+    // Try to wake backend and DB; ignore failures
+    fetch(`${base}/ping`).catch(() => {});
+  }, []);
+
+    return (
+>>>>>>> b50a452 (fix)
     <div className="container">
       {/* HEADER: Logo, Title, Search & Sorting Controls */}
       <header className="header">
