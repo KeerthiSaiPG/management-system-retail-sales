@@ -5,8 +5,7 @@ import SortingDropdown from "./components/SortingDropdown";
 import TransactionTable from "./components/TransactionTable";
 import PaginationControls from "./components/PaginationControls";
 import useSalesQuery from "./hooks/useSalesQuery";
-import logo from "./assets/logo.png"; 
-
+import logo from "./assets/logo.png";
 
 export default function App() {
   const {
@@ -18,37 +17,15 @@ export default function App() {
     reload
   } = useSalesQuery();
 
-<<<<<<< HEAD
-  if (import.meta.env.PROD) {
-    return (
-      <div className="container">
-        <header className="header">
-          <div className="brand">
-            <div className="logo">
-              <img
-                src={logo}
-                alt="Retail Sales Management System Logo"
-                className="logo-img"
-              />
-            </div>
-          </div>
-        </header>
-      </div>
-    );
-  }
-
-  return (
-=======
+  // Wake backend for production
   useEffect(() => {
-    const base = import.meta.env.VITE_BACKEND_URL || "";
-    // Try to wake backend and DB; ignore failures
-    fetch(`${base}/ping`).catch(() => {});
+    const base = import.meta.env.VITE_API_BASE || "";
+    fetch(`${base}/api/sales?page=1&pageSize=1`).catch(() => {});
   }, []);
 
-    return (
->>>>>>> b50a452 (fix)
+  return (
     <div className="container">
-      {/* HEADER: Logo, Title, Search & Sorting Controls */}
+      {/* HEADER */}
       <header className="header">
         <div className="brand">
           <div className="logo">
@@ -63,7 +40,7 @@ export default function App() {
           </div>
         </div>
 
-        {/* Search and Sort - Stack vertically on mobile, horizontally on desktop */}
+        {/* Search + Sorting */}
         <div className="header-controls">
           <div className="search-wrapper">
             <SearchBar value={state.search} onSearch={setSearch} />
@@ -72,24 +49,23 @@ export default function App() {
         </div>
       </header>
 
-      {/* MAIN LAYOUT: Sidebar (Filter) on LEFT for desktop, STACKED on mobile */}
+      {/* MAIN LAYOUT */}
       <div className="layout">
-        {/* FILTER SIDEBAR: Left on desktop, Top on mobile */}
+        {/* FILTER SIDEBAR */}
         <aside className="sidebar card">
           <FilterPanel filters={state.filters} onChange={setFilters} />
         </aside>
 
-        {/* TABLE SECTION: Right on desktop, Bottom on mobile */}
+        {/* TABLE SECTION */}
         <main className="main">
           <div className="card">
-            {/* Title & Summary Info */}
             <div className="table-header-info">
               <div className="table-title">Transactions</div>
               <div className="table-summary">Showing {state.items.length} of {state.total}</div>
             </div>
 
-            {/* STATS: Responsive grid that stacks on mobile */}
-            <div className="stats" style={{marginBottom:12}}>
+            {/* STATS */}
+            <div className="stats" style={{ marginBottom: 12 }}>
               <div className="stat">
                 <div>
                   <div className="lbl">Total Transactions</div>
@@ -115,13 +91,17 @@ export default function App() {
               </div>
             </div>
 
-            {/* TABLE with horizontal scroll on mobile */}
+            {/* TABLE */}
             <TransactionTable items={state.items} />
 
-            {/* Pagination & Tip */}
+            {/* FOOTER */}
             <div className="table-footer">
               <div className="pagination-tip">Tip: Use filters to narrow results</div>
-              <PaginationControls page={state.page} totalPages={state.totalPages} onPageChange={setPage} />
+              <PaginationControls
+                page={state.page}
+                totalPages={state.totalPages}
+                onPageChange={setPage}
+              />
             </div>
           </div>
         </main>
